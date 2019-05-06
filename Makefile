@@ -1,26 +1,25 @@
 ##
 ## EPITECH PROJECT, 2018
-## PSU_myftp_2018
+## myARPspoof
 ## File description:
 ## Makefile
 ##
 
-CC			=	gcc
-INC			=	-Iinclude/
+CC		=	gcc
+INC		=	-Iinclude/
 DTESTS		=	tests/
 DSRC		=	src/
-DUTILS		=	$(DSRC)utils/
-DCOMMANDS	=	$(DSRC)commands/
 
-MAIN		=	$(DSRC)main.c		\
+MAIN		=	$(DSRC)main.c
 
-SRC			=	$(DSRC)socket.c			\
+SRC		=	$(DSRC)socket.c			\
 
 SRC_UT		=	$(DTESTS)socket_test.c		\
 
 CFLAGS		+=	-Wall -Wextra $(INC)
-OBJ			=	$(SRC:.c=.o) $(MAIN:.c=.o)
+OBJ		=	$(SRC:.c=.o) $(MAIN:.c=.o)
 NAME		=	myARPspoof
+NAME_UT		=	units
 
 all: $(OBJ)
 	$(CC) -o $(NAME) $(OBJ) $(CFLAGS)
@@ -37,4 +36,16 @@ re: fclean all
 debug: CFLAGS += -g
 debug: re
 
-.PHONY: all clean fclean re debug
+tests_run: CFLAGS += --coverage -lgcov -lcriterion
+tests_run:
+	$(CC) -o $(NAME_UT) $(SRC) $(SRC_UT) $(CFLAGS) $(LDFLAGS) $(INC_UT)
+	./$(NAME_UT)
+	gcov *.gcno &> /dev/null
+
+tests_debug: CXXFLAGS += -g
+tests_debug: tests_run
+
+tests_clean:
+	rm -f $(NAME_UT) *.gcno *.gcov *.gcda
+
+.PHONY: all clean fclean re debug tests_run tests_debug tests_clean

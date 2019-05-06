@@ -1,16 +1,1 @@
-/*
-** EPITECH PROJECT, 2018
-** PSU_myftp_2018
-** File description:
-** socket.c
-*/
-
-#include <sys/socket.h>
-#include <netinet/in.h>
-
-int create_socket()
-{
-    int sock = socket(AF_PACKET, SOCK_RAW, IPPROTO_TCP);
-
-    return sock;
-}
+/*** EPITECH PROJECT, 2018** myARPspoof** File description:** socket.c*/#include <sys/socket.h>#include <netinet/in.h>#include <stdio.h>#include <stdlib.h>int create_socket(){    int sock = socket(AF_PACKET, SOCK_RAW, 0);    if (sock == -1) {        perror("socket");        exit(84);    }    return sock;}
