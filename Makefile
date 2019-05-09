@@ -13,6 +13,7 @@ DSRC		=	src/
 MAIN		=	$(DSRC)main.c
 
 SRC		=	$(DSRC)socket.c			\
+			$(DSRC)header.c			\
 
 SRC_UT		=	$(DTESTS)socket_test.c		\
 
