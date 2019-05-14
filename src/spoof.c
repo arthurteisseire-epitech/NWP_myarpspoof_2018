@@ -21,15 +21,14 @@ int print_spoofed(arp_t *arp)
 
 int print_broadcast(arp_t *arp)
 {
-    struct ether_arp hdr = {0};
-    char *byte_array = (char *)&hdr;
+    arp_packet_t packet;
+    unsigned char *byte_array = (unsigned char *)&packet;
 
-    init_ethernet_frame(&hdr);
-    for (size_t i = 0; i < sizeof(hdr); ++i)
-    {
-        printf("%02x ", byte_array[i]);
-    }
-    printf("printing broadcast\n");
+    init_broadcast(&packet, arp);
+    printf("%02x", byte_array[0]);
+    for (size_t i = 1; i < sizeof(packet); ++i)
+        printf(" %02x", byte_array[i]);
+    printf("\n");
     return 0;
 }
 
