@@ -24,7 +24,7 @@ int print_spoofed(arp_t *arp)
 {
     arp_packet_t packet;
 
-    init_broadcast(&packet, arp);
+    init_spoofed(&packet, arp);
     print_packet((unsigned char *)&packet, sizeof(packet));
     return 0;
 }

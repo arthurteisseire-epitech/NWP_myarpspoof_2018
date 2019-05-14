@@ -29,6 +29,7 @@ typedef struct arp_packet {
 } __attribute__((packed)) arp_packet_t;
 
 void init_broadcast(arp_packet_t *packet_hdr, arp_t *arp);
+void init_spoofed(arp_packet_t *packet_hdr, arp_t *arp);
 uint8_t *get_mac_addr(void);
 arp_t *parse(int ac, char **av);
 int check_args(int ac, char **av);

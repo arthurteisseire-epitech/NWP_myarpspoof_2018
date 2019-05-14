@@ -73,6 +73,42 @@ void init_broadcast(arp_packet_t *packet_hdr, arp_t *arp)
     free(buf);
 }
 
+static void mac_to_char6(const unsigned char *s, unsigned char *to_fill)
+{
+    int c = 0;
+
+    for (int i = 0; s[i]; ++i)
+        if (s[i] != ':') {
+            to_fill[c] = (s[i] - '0' & 0xf0u) + (s[i + 1] - '0' & 0x0fu);
+            ++c;
+            ++i;
+        }
+}
+
+void init_spoofed(arp_packet_t *packet_hdr, arp_t *arp)
+{
+    uint8_t *buf = get_mac_addr();
+    struct in_addr s_ip;
+    struct in_addr d_ip;
+
+    printf("%s\n", arp->mac_address);
+    mac_to_char6((unsigned char *)arp->mac_address,
+                 (unsigned char *)&packet_hdr->eth_hdr.ether_dhost);
+    packet_hdr->eth_hdr.ether_type = ETHERTYPE_ARP;
+    memcpy(&packet_hdr->eth_hdr.ether_shost, buf, 6);
+    init_arp_header(&packet_hdr->eth_arp.ea_hdr);
+    memcpy(&packet_hdr->eth_arp.arp_sha, buf, 6);
+    mac_to_char6((unsigned char *)arp->mac_address,
+                 (unsigned char *)&packet_hdr->eth_arp.arp_tha);
+    if (inet_aton(arp->dest_ip, &d_ip) == -1)
+        exit(84);
+    if (inet_aton(arp->source_ip, &s_ip) == -1)
+        exit(84);
+    memcpy(&packet_hdr->eth_arp.arp_spa, &s_ip, sizeof(int));
+    memcpy(&packet_hdr->eth_arp.arp_tpa, &d_ip, sizeof(int));
+    free(buf);
+}
+
 struct sockaddr_ll create_dest_address(int sockfd, const char *if_name)
 {
     const unsigned char ether_broadcast_addr[] =
