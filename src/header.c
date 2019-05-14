@@ -15,6 +15,7 @@
 #include <net/if.h>
 #include <sys/ioctl.h>
 #include <errno.h>
+#include "arpspoof.h"
 
 static void init_arp_header(struct arphdr *hdr)
 {
@@ -22,7 +23,7 @@ static void init_arp_header(struct arphdr *hdr)
     hdr->ar_hrd = htons(ARPHRD_ETHER);
     hdr->ar_op = htons(ARPOP_REQUEST);
     hdr->ar_pln = sizeof(in_addr_t);
-    hdr->ar_pro = htons(ETH_P_IP);
+    hdr->ar_pro = htons(ETHERTYPE_IP);
 }
 
 static int find_ifindex(int sockfd, const char *if_name)
@@ -48,6 +49,14 @@ void init_ethernet_frame(struct ether_arp *hdr)
 {
     init_arp_header(&hdr->ea_hdr);
     memset(&hdr->arp_tha, 0, sizeof(hdr->arp_tha));
+}
+
+void init_broadcast(arp_packet_t *packet_hdr)
+{
+    memset(&packet_hdr->eth_hdr.ether_dhost, 255, 6);
+    packet_hdr->eth_hdr.ether_type = 0x0806;
+
+    //TODO: remplir le packet_hdr->eth_arp
 }
 
 struct sockaddr_ll create_dest_address(int sockfd, const char *if_name)

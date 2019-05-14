@@ -13,5 +13,5 @@ int main(int ac, char **av)
         usage(av[0]);
         return 84;
     }
-    return (my_arpspoof(parse(ac, av)));
+    return my_arpspoof(parse(ac, av));
 }

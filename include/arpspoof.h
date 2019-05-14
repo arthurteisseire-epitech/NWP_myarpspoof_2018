@@ -23,6 +23,12 @@ typedef struct arp {
     char *mac_address;
 } arp_t;
 
+typedef struct arp_packet {
+    struct ether_header eth_hdr;
+    struct ether_arp eth_arp;
+} __attribute__((packed)) arp_packet_t;
+
+uint8_t *get_mac_addr(void);
 arp_t *parse(int ac, char **av);
 int check_args(int ac, char **av);
 void usage(char *name);

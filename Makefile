@@ -16,6 +16,7 @@ SRC		=	$(DSRC)socket.c			\
 			$(DSRC)header.c			\
 			$(DSRC)args.c			\
 			$(DSRC)spoof.c			\
+			$(DSRC)utilities.c      \
 
 SRC_UT		=	$(DTESTS)socket_test.c		\
 				$(DTESTS)arg_test.c			\

@@ -9,28 +9,27 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <stdio.h>
+#include <netinet/ether.h>
 #include "arpspoof.h"
 
 int print_spoofed(arp_t *arp)
 {
     (void)arp;
+    printf("printing spoof\n");
     return 0;
 }
 
 int print_broadcast(arp_t *arp)
 {
-    struct ether_arp hdr;
+    struct ether_arp hdr = {0};
+    char *byte_array = (char *)&hdr;
+
     init_ethernet_frame(&hdr);
-
-    char *hdr_as_byte_array = (char *)&hdr;
-
-    for (int i = 0; i < sizeof(hdr); ++i) {
-        char byte = hdr_as_byte_array[i];
-        printf("%02x ", byte);
-        printf("%d ", byte);
+    for (size_t i = 0; i < sizeof(hdr); ++i)
+    {
+        printf("%02x ", byte_array[i]);
     }
-    printf("%ld\n", sizeof(hdr));
-    printf("%s\n", "bite");
+    printf("printing broadcast\n");
     return 0;
 }
 
