@@ -79,7 +79,7 @@ static void mac_to_char6(const unsigned char *s, unsigned char *to_fill)
 
     for (int i = 0; s[i]; ++i)
         if (s[i] != ':') {
-            to_fill[c] = (s[i] - '0' & 0xf0u) + (s[i + 1] - '0' & 0x0fu);
+            to_fill[c] = ((s[i] - '0') & 0xf0u) + ((s[i + 1] - '0') & 0x0fu);
             ++c;
             ++i;
         }
@@ -91,7 +91,6 @@ void init_spoofed(arp_packet_t *packet_hdr, arp_t *arp)
     struct in_addr s_ip;
     struct in_addr d_ip;
 
-    printf("%s\n", arp->mac_address);
     mac_to_char6((unsigned char *)arp->mac_address,
                  (unsigned char *)&packet_hdr->eth_hdr.ether_dhost);
     packet_hdr->eth_hdr.ether_type = ETHERTYPE_ARP;
