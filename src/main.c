@@ -5,7 +5,13 @@
 ** main.c
 */
 
-int main(void)
+#include "arpspoof.h"
+
+int main(int ac, char **av)
 {
-    return 0;
+    if (check_args(ac, av) == 1) {
+        usage(av[0]);
+        return 84;
+    }
+    return (my_arpspoof(parse(ac, av)));
 }

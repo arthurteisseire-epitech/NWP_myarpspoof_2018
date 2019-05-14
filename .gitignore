@@ -14,5 +14,8 @@ coverage
 cmake-build-debug/
 CMakeFiles/
 
+# Vscode
+.vscode/
+
 # Project
 myARPspoof

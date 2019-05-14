@@ -14,8 +14,11 @@ MAIN		=	$(DSRC)main.c
 
 SRC		=	$(DSRC)socket.c			\
 			$(DSRC)header.c			\
+			$(DSRC)args.c			\
+			$(DSRC)spoof.c			\
 
 SRC_UT		=	$(DTESTS)socket_test.c		\
+				$(DTESTS)arg_test.c			\
 
 CFLAGS		+=	-Wall -Wextra $(INC)
 OBJ		=	$(SRC:.c=.o) $(MAIN:.c=.o)
