@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2018
 ** myARPspoof
 ** File description:
-** header.c
+** init_header.c
 */
 
 #include <sys/socket.h>
@@ -25,31 +25,6 @@ static void init_arp_header(struct arphdr *hdr)
     hdr->ar_op = htons(ARPOP_REQUEST);
     hdr->ar_pln = sizeof(in_addr_t);
     hdr->ar_pro = htons(ETHERTYPE_IP);
-}
-
-static int find_ifindex(int sockfd, const char *if_name)
-{
-    struct ifreq ifr;
-    size_t if_name_len = strlen(if_name);
-
-    if (if_name_len < sizeof(ifr.ifr_name)) {
-        memcpy(ifr.ifr_name, if_name, if_name_len);
-        ifr.ifr_name[if_name_len] = 0;
-    } else {
-        fprintf(stderr, "interface name is too long");
-        exit(84);
-    }
-    if (ioctl(sockfd, SIOCGIFINDEX, &ifr) == -1) {
-        perror("ioctl");
-        exit(84);
-    }
-    return ifr.ifr_ifindex;
-}
-
-void init_ethernet_frame(struct ether_arp *hdr)
-{
-    init_arp_header(&hdr->ea_hdr);
-    memset(&hdr->arp_tha, 0, sizeof(hdr->arp_tha));
 }
 
 void init_broadcast(arp_packet_t *packet_hdr, arp_t *arp)
@@ -108,16 +83,8 @@ void init_spoofed(arp_packet_t *packet_hdr, arp_t *arp)
     free(buf);
 }
 
-struct sockaddr_ll create_dest_address(int sockfd, const char *if_name)
+void init_ethernet_frame(struct ether_arp *hdr)
 {
-    const unsigned char ether_broadcast_addr[] =
-        {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
-    struct sockaddr_ll addr = {0};
-
-    addr.sll_family = AF_PACKET;
-    addr.sll_ifindex = find_ifindex(sockfd, if_name);
-    addr.sll_halen = ETHER_ADDR_LEN;
-    addr.sll_protocol = htons(ETH_P_ARP);
-    memcpy(addr.sll_addr, ether_broadcast_addr, ETHER_ADDR_LEN);
-    return addr;
+    init_arp_header(&hdr->ea_hdr);
+    memset(&hdr->arp_tha, 0, sizeof(hdr->arp_tha));
 }
