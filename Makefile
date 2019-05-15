@@ -13,7 +13,8 @@ DSRC		=	src/
 MAIN		=	$(DSRC)main.c
 
 SRC		=	$(DSRC)socket.c			\
-			$(DSRC)header.c			\
+			$(DSRC)init_header.c	\
+			$(DSRC)address.c		\
 			$(DSRC)args.c			\
 			$(DSRC)spoof.c			\
 			$(DSRC)utilities.c      \
