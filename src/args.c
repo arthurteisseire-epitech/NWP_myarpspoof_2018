@@ -38,7 +38,7 @@ void usage(char *name)
     printf("[--printSpoof ['macaddr']\n");
 }
 
-static int is_mac_addr(const char *addr)
+int is_mac_addr(const char *addr)
 {
     const char *mac_addr_regex = "([0-9a-f]){2}(:[0-9a-f]{2}){5}";
     regex_t preg;
