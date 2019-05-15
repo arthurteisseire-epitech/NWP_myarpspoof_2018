@@ -54,7 +54,7 @@ static void mac_to_char6(const unsigned char *s, unsigned char *to_fill)
 
     for (int i = 0; s[i]; ++i)
         if (s[i] != ':') {
-            to_fill[c] = (((s[i] - '0') & 0x0fu) << 4) + ((s[i + 1] - '0') & 0x0fu);
+            to_fill[c] = strtol((const char *)&s[i], NULL, 16);
             ++c;
             ++i;
         }
