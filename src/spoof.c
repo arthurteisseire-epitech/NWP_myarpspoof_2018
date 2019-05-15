@@ -48,10 +48,16 @@ int arp_spoof(arp_t *arp)
     char buff[4096];
 
     init_broadcast(&packet, arp);
-    sendto(sock, &packet, sizeof(packet), 0, (struct sockaddr *) &dest_addr,
-           addr_size);
-    recvfrom(sock, buff, sizeof(buff), 0, (struct sockaddr *) &dest_addr,
-             &addr_size);
+    if (sendto(sock, &packet, sizeof(packet), 0, (struct sockaddr *) &dest_addr,
+           addr_size) == -1) {
+        perror("sendto");
+        exit(84);
+    }
+    if (recvfrom(sock, buff, sizeof(buff), 0, (struct sockaddr *) &dest_addr,
+             &addr_size) == -1) {
+        perror("recvfrom");
+        exit(84);
+    }
     print_packet((unsigned char *) buff, sizeof(packet));
     return 0;
 }

@@ -34,7 +34,7 @@ void init_broadcast(arp_packet_t *packet_hdr, arp_t *arp)
     struct in_addr d_ip;
 
     memset(&packet_hdr->eth_hdr.ether_dhost, 255, 6);
-    packet_hdr->eth_hdr.ether_type = ETHERTYPE_ARP;
+    packet_hdr->eth_hdr.ether_type = 0x0608;
     memcpy(&packet_hdr->eth_hdr.ether_shost, buf, 6);
     init_arp_header(&packet_hdr->eth_arp.ea_hdr);
     memcpy(&packet_hdr->eth_arp.arp_sha, buf, 6);
