@@ -22,6 +22,7 @@ SRC		=	$(DSRC)socket.c			\
 SRC_UT		=	$(DTESTS)socket_test.c		\
 				$(DTESTS)arg_test.c			\
 				$(DTESTS)mac_address_test.c \
+				$(DTESTS)mac_to_char6.c			\
 
 CFLAGS		+=	-Wall -Wextra $(INC)
 OBJ		=	$(SRC:.c=.o) $(MAIN:.c=.o)
