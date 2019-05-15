@@ -48,7 +48,7 @@ void init_broadcast(arp_packet_t *packet_hdr, arp_t *arp)
     free(buf);
 }
 
-static void mac_to_char6(const unsigned char *s, unsigned char *to_fill)
+void mac_to_char6(const unsigned char *s, unsigned char *to_fill)
 {
     int c = 0;
 
