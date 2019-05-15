@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <regex.h>
 #include "arpspoof.h"
 
 arp_t *parse(int ac, char **av)
@@ -37,6 +38,23 @@ void usage(char *name)
     printf("[--printSpoof ['macaddr']\n");
 }
 
+static int is_mac_addr(const char *addr)
+{
+    const char *mac_addr_regex = "([0-9a-f]){2}(:[0-9a-f]{2}){5}";
+    regex_t preg;
+
+    if (strlen(addr) != 17)
+        return 0;
+
+    if (regcomp(&preg, mac_addr_regex, REG_NOSUB | REG_EXTENDED) != 0) {
+        perror("regcomp");
+        exit(84);
+    }
+    if (regexec(&preg, addr, 0, NULL, 0) == 0)
+        return 1;
+    return 0;
+}
+
 int check_args(int ac, char **av)
 {
     if (ac < 4 || ac > 6)
@@ -48,6 +66,8 @@ int check_args(int ac, char **av)
         (strcmp(av[4], SPOOFOPT) == 0 && ac != 6)) {
             return 1;
         }
+        if (strcmp(av[4], SPOOFOPT) == 0 && is_mac_addr(av[5]) == 0)
+            return 1;
     }
     return 0;
 }
