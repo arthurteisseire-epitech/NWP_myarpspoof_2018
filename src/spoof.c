@@ -9,56 +9,38 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <stdio.h>
+#include <string.h>
 #include <netinet/ether.h>
 #include <unistd.h>
 #include "arpspoof.h"
 
-void print_packet(const unsigned char *packet, size_t size)
+static void print_mac_address(uint8_t mac[ETH_ALEN])
 {
-    printf("%02x", packet[0]);
-    for (size_t i = 1; i < size; ++i)
-        printf(" %02x", packet[i]);
-    printf("\n");
+    char *sep = "";
+
+    for (size_t i = 0; i < ETH_ALEN; ++i) {
+        printf("%s%02X", sep, mac[i]);
+        sep = ":";
+    }
 }
 
-int print_spoofed(arp_t *arp)
+static void send_packet(arp_packet_t *packet)
 {
-    arp_packet_t packet;
-
-    init_spoofed(&packet, arp);
-    print_packet((unsigned char *) &packet, sizeof(packet));
-    return 0;
-}
-
-int print_broadcast(arp_t *arp)
-{
-    arp_packet_t packet;
-
-    init_broadcast(&packet, arp);
-    print_packet((unsigned char *) &packet, sizeof(packet));
-    return 0;
+    printf("Found victim’s MAC address: '");
+    print_mac_address(packet->eth_hdr.ether_dhost);
+    printf("'\n");
 }
 
 int arp_spoof(arp_t *arp)
 {
     arp_packet_t packet;
-    int sock = create_socket();
-    struct sockaddr_ll dest_addr = create_dest_address(sock, arp->iface);
-    socklen_t addr_size = sizeof(struct sockaddr_ll);
-    char buff[4096];
+    uint8_t *mac = get_mac_of(arp);
 
     init_broadcast(&packet, arp);
-    if (sendto(sock, &packet, sizeof(packet), 0, (struct sockaddr *) &dest_addr,
-           addr_size) == -1) {
-        perror("sendto");
-        exit(84);
-    }
-    if (recvfrom(sock, buff, sizeof(buff), 0, (struct sockaddr *) &dest_addr,
-             &addr_size) == -1) {
-        perror("recvfrom");
-        exit(84);
-    }
-    print_packet((unsigned char *) buff, sizeof(packet));
+    memcpy(packet.eth_hdr.ether_dhost, mac, ETH_ALEN);
+    memcpy(packet.eth_arp.arp_tha, mac, ETH_ALEN);
+    free(mac);
+    send_packet(&packet);
     return 0;
 }
 

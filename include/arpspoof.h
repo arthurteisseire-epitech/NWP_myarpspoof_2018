@@ -28,6 +28,10 @@ typedef struct arp_packet {
     struct ether_arp eth_arp;
 } __attribute__((packed)) arp_packet_t;
 
+int print_spoofed(arp_t *arp);
+uint8_t *get_mac_of(arp_t *arp);
+int print_broadcast(arp_t *arp);
+void print_packet(const unsigned char *packet, size_t size);
 void init_broadcast(arp_packet_t *packet_hdr, arp_t *arp);
 void init_spoofed(arp_packet_t *packet_hdr, arp_t *arp);
 uint8_t *get_mac_addr(void);

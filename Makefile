@@ -18,6 +18,8 @@ SRC		=	$(DSRC)socket.c			\
 			$(DSRC)args.c			\
 			$(DSRC)spoof.c			\
 			$(DSRC)utilities.c      \
+			$(DSRC)get_mac_of.c      \
+			$(DSRC)print.c      \
 
 SRC_UT		=	$(DTESTS)socket_test.c		\
 				$(DTESTS)arg_test.c			\
