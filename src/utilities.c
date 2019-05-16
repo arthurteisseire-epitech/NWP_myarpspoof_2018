@@ -55,3 +55,14 @@ uint8_t *get_mac_addr(void)
     close(sock);
     return mac_address;
 }
+
+char *char6_to_mac(const unsigned char *mac_addr)
+{
+    char *macStr = malloc(18);
+
+    snprintf(macStr, 18, "%02x:%02x:%02x:%02x:%02x:%02x",
+            mac_addr[0], mac_addr[1], mac_addr[2], mac_addr[3], mac_addr[4],
+            mac_addr[5]);
+    printf("mac_addr : %s\n", macStr);
+    return macStr;
+}

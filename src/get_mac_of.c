@@ -23,24 +23,22 @@ uint8_t *get_mac_of(arp_t *arp)
 {
     arp_packet_t packet;
     arp_packet_t *recv_packet;
-    int sock = create_socket();
     struct sockaddr_ll dest_addr = create_dest_address(arp->iface);
     socklen_t addr_size = sizeof(struct sockaddr_ll);
     char buff[4096];
 
+    arp->sock = create_socket();
     init_broadcast(&packet, arp);
-    if (sendto(sock, &packet, sizeof(packet), 0, (struct sockaddr *) &dest_addr,
-            addr_size) == -1) {
+    if (sendto(arp->sock, &packet, sizeof(packet), 0,
+            (struct sockaddr *) &dest_addr, addr_size) == -1) {
         perror("sendto");
         exit(84);
     }
-    if (recvfrom(sock, buff, sizeof(buff), 0, (struct sockaddr *) &dest_addr,
-            &addr_size) == -1) {
+    if (recvfrom(arp->sock, buff, sizeof(buff), 0,
+            (struct sockaddr *) &dest_addr, &addr_size) == -1) {
         perror("recvfrom");
         exit(84);
     }
     recv_packet = (void *) buff;
-    close(sock);
     return mem_alloc(recv_packet->eth_hdr.ether_shost, ETH_ALEN);
 }
-

@@ -21,6 +21,7 @@ typedef struct arp {
     char broadcast_opt;
     char spoof_opt;
     char *mac_address;
+    int sock;
 } arp_t;
 
 typedef struct arp_packet {
@@ -44,5 +45,6 @@ int my_arpspoof(arp_t *arp);
 void mac_to_char6(const unsigned char *s, unsigned char *to_fill);
 struct sockaddr_ll create_dest_address(const char *if_name);
 void init_ethernet_frame(struct ether_arp *hdr);
+char *char6_to_mac(const unsigned char *mac_addr);
 
 #endif /* !ARPSPOOF_H_ */

