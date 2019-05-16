@@ -45,7 +45,6 @@ int is_mac_addr(const char *addr)
 
     if (strlen(addr) != 17)
         return 0;
-
     if (regcomp(&preg, mac_addr_regex, REG_NOSUB | REG_EXTENDED) != 0) {
         perror("regcomp");
         exit(84);

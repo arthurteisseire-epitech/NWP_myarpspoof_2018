@@ -54,7 +54,7 @@ void mac_to_char6(const unsigned char *s, unsigned char *to_fill)
 
     for (int i = 0; s[i]; ++i)
         if (s[i] != ':') {
-            to_fill[c] = strtol((const char *)&s[i], NULL, 16);
+            to_fill[c] = strtol((const char *) &s[i], NULL, 16);
             ++c;
             ++i;
         }
@@ -66,14 +66,14 @@ void init_spoofed(arp_packet_t *packet_hdr, arp_t *arp)
     struct in_addr s_ip;
     struct in_addr d_ip;
 
-    mac_to_char6((unsigned char *)arp->mac_address,
-                 (unsigned char *)&packet_hdr->eth_hdr.ether_dhost);
+    mac_to_char6((unsigned char *) arp->mac_address,
+        (unsigned char *) &packet_hdr->eth_hdr.ether_dhost);
     packet_hdr->eth_hdr.ether_type = ETHERTYPE_ARP;
     memcpy(&packet_hdr->eth_hdr.ether_shost, buf, 6);
     init_arp_header(&packet_hdr->eth_arp.ea_hdr);
     memcpy(&packet_hdr->eth_arp.arp_sha, buf, 6);
-    mac_to_char6((unsigned char *)arp->mac_address,
-                 (unsigned char *)&packet_hdr->eth_arp.arp_tha);
+    mac_to_char6((unsigned char *) arp->mac_address,
+        (unsigned char *) &packet_hdr->eth_arp.arp_tha);
     if (inet_aton(arp->dest_ip, &d_ip) == -1)
         exit(84);
     if (inet_aton(arp->source_ip, &s_ip) == -1)

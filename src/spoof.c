@@ -74,7 +74,6 @@ void free_arp(arp_t *arp)
 int my_arpspoof(arp_t *arp)
 {
     int n;
-    struct ether_arp;
 
     if (arp->spoof_opt == 1)
         n = print_spoofed(arp);
