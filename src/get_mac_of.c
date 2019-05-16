@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 #include "arpspoof.h"
 
 static uint8_t *mem_alloc(uint8_t *data, size_t size)
@@ -39,6 +40,7 @@ uint8_t *get_mac_of(arp_t *arp)
         exit(84);
     }
     recv_packet = (void *) buff;
+    close(sock);
     return mem_alloc(recv_packet->eth_hdr.ether_shost, ETH_ALEN);
 }
 
