@@ -29,7 +29,7 @@ static void print_mac_address(uint8_t mac[ETH_ALEN])
 static void send_packet(arp_packet_t *packet, arp_t *arp)
 {
     int sock = create_socket();
-    struct sockaddr_ll dest_addr = create_dest_address(sock, arp->iface);
+    struct sockaddr_ll dest_addr = create_dest_address(arp->iface);
     socklen_t addr_size = sizeof(struct sockaddr_ll);
 
     memcpy(dest_addr.sll_addr, packet->eth_hdr.ether_dhost, ETH_ALEN);

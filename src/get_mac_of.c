@@ -24,7 +24,7 @@ uint8_t *get_mac_of(arp_t *arp)
     arp_packet_t packet;
     arp_packet_t *recv_packet;
     int sock = create_socket();
-    struct sockaddr_ll dest_addr = create_dest_address(sock, arp->iface);
+    struct sockaddr_ll dest_addr = create_dest_address(arp->iface);
     socklen_t addr_size = sizeof(struct sockaddr_ll);
     char buff[4096];
 
