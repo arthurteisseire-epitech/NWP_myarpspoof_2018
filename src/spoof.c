@@ -47,7 +47,6 @@ int arp_spoof(arp_t *arp)
             perror("sendto");
         }
         printf("Spoofed packet sent to '%s'\n", arp->dest_ip);
-        print_packet((unsigned char *)&packet, sizeof(arp_packet_t));
         sleep(1);
     }
 }
