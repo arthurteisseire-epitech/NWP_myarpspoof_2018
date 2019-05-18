@@ -51,26 +51,3 @@ int arp_spoof(arp_t *arp)
         sleep(1);
     }
 }
-
-void free_arp(arp_t *arp)
-{
-    free(arp->dest_ip);
-    free(arp->iface);
-    free(arp->mac_address);
-    free(arp->source_ip);
-    free(arp);
-}
-
-int my_arpspoof(arp_t *arp)
-{
-    int n;
-
-    if (arp->spoof_opt == 1)
-        n = print_spoofed(arp);
-    else if (arp->broadcast_opt == 1)
-        n = print_broadcast(arp);
-    else
-        n = arp_spoof(arp);
-    free_arp(arp);
-    return n;
-}

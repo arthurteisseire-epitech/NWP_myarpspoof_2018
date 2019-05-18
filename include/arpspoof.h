@@ -28,6 +28,7 @@ typedef struct arp_packet {
     struct ether_arp eth_arp;
 } __attribute__((packed)) arp_packet_t;
 
+int arp_spoof(arp_t *arp);
 int print_spoofed(arp_t *arp);
 uint8_t *get_mac_of(char *ip, char *iface);
 int print_broadcast(arp_t *arp);
@@ -40,10 +41,8 @@ arp_t *parse(int ac, char **av);
 int check_args(int ac, char **av);
 void usage(char *name);
 int create_socket();
-int my_arpspoof(arp_t *arp);
 void mac_to_char6(const unsigned char *s, unsigned char *to_fill);
 struct sockaddr_ll create_dest_address(const char *if_name);
-void init_ethernet_frame(struct ether_arp *hdr);
 char *char6_to_mac(const unsigned char *mac_addr);
 
 #endif /* !ARPSPOOF_H_ */
