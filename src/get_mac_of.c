@@ -19,26 +19,27 @@ static uint8_t *mem_alloc(uint8_t *data, size_t size)
     return mem;
 }
 
-uint8_t *get_mac_of(arp_t *arp)
+uint8_t *get_mac_of(char *ip, char *iface)
 {
     arp_packet_t packet;
     arp_packet_t *recv_packet;
-    struct sockaddr_ll dest_addr = create_dest_address(arp->iface);
+    struct sockaddr_ll dest_addr = create_dest_address(iface);
     socklen_t addr_size = sizeof(struct sockaddr_ll);
     char buff[4096];
+    int sock = create_socket();
 
-    arp->sock = create_socket();
-    init_broadcast(&packet, arp);
-    if (sendto(arp->sock, &packet, sizeof(packet), 0,
+    init_broadcast(&packet, ip);
+    if (sendto(sock, &packet, sizeof(packet), 0,
             (struct sockaddr *) &dest_addr, addr_size) == -1) {
         perror("sendto");
         exit(84);
     }
-    if (recvfrom(arp->sock, buff, sizeof(buff), 0,
+    if (recvfrom(sock, buff, sizeof(buff), 0,
             (struct sockaddr *) &dest_addr, &addr_size) == -1) {
         perror("recvfrom");
         exit(84);
     }
     recv_packet = (void *) buff;
+    close(sock);
     return mem_alloc(recv_packet->eth_hdr.ether_shost, ETH_ALEN);
 }

