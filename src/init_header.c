@@ -72,6 +72,7 @@ void init_spoofed(arp_packet_t *packet_hdr, arp_t *arp)
     packet_hdr->eth_hdr.ether_type = 0x0608;
     memcpy(&packet_hdr->eth_hdr.ether_shost, buf, 6);
     init_arp_header(&packet_hdr->eth_arp.ea_hdr);
+    packet_hdr->eth_arp.ea_hdr.ar_op = 0x0200;
     memset(&packet_hdr->eth_arp.arp_tha, 0, sizeof(packet_hdr->eth_arp.arp_tha));
     memcpy(&packet_hdr->eth_arp.arp_sha, buf, 6);
     mac_to_char6((unsigned char *) arp->mac_address,
