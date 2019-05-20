@@ -19,7 +19,7 @@ static uint8_t *mem_alloc(uint8_t *data, size_t size)
     return mem;
 }
 
-uint8_t *get_mac_of(char *ip, char *iface)
+uint8_t *get_mac_of(char *ip, char *iface, char *source_ip)
 {
     arp_packet_t packet;
     arp_packet_t *recv_packet;
@@ -28,7 +28,7 @@ uint8_t *get_mac_of(char *ip, char *iface)
     char buff[4096];
     int sock = create_socket();
 
-    init_broadcast(&packet, ip);
+    init_broadcast(&packet, ip, source_ip);
     if (sendto(sock, &packet, sizeof(packet), 0,
             (struct sockaddr *) &dest_addr, addr_size) == -1) {
         perror("sendto");

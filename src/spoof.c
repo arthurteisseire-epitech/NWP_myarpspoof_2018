@@ -32,7 +32,7 @@ int arp_spoof(arp_t *arp)
     struct sockaddr_ll dest_addr = create_dest_address(arp->iface);
     socklen_t addr_size = sizeof(struct sockaddr_ll);
     int sock = create_socket();
-    uint8_t *mac = get_mac_of(arp->dest_ip, arp->iface);
+    uint8_t *mac = get_mac_of(arp->dest_ip, arp->iface, arp->source_ip);
 
     arp->mac_address = char6_to_mac((unsigned char *)mac);
     free(mac);

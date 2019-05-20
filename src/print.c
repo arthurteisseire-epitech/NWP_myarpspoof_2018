@@ -29,7 +29,7 @@ int print_broadcast(arp_t *arp)
 {
     arp_packet_t packet;
 
-    init_broadcast(&packet, arp->dest_ip);
+    init_broadcast(&packet, arp->dest_ip, arp->source_ip);
     print_packet((unsigned char *) &packet, sizeof(packet));
     return 0;
 }

@@ -30,10 +30,10 @@ typedef struct arp_packet {
 
 int arp_spoof(arp_t *arp);
 int print_spoofed(arp_t *arp);
-uint8_t *get_mac_of(char *ip, char *iface);
+uint8_t *get_mac_of(char *ip, char *iface, char *d_ip);
 int print_broadcast(arp_t *arp);
 void print_packet(const unsigned char *packet, size_t size);
-void init_broadcast(arp_packet_t *packet_hdr, char *ip);
+void init_broadcast(arp_packet_t *packet_hdr, char *dest_ip, char *source_ip);
 void init_spoofed(arp_packet_t *packet_hdr, arp_t *arp);
 uint8_t *get_mac_addr(void);
 int is_mac_addr(const char *addr);

@@ -27,7 +27,7 @@ static void init_arp_header(struct arphdr *hdr)
     hdr->ar_pro = htons(ETHERTYPE_IP);
 }
 
-void init_broadcast(arp_packet_t *packet_hdr, char *ip)
+void init_broadcast(arp_packet_t *packet_hdr, char *dest_ip, char *source_ip)
 {
     uint8_t *buf = get_mac_addr();
     struct in_addr s_ip;
@@ -40,9 +40,9 @@ void init_broadcast(arp_packet_t *packet_hdr, char *ip)
     memset(&packet_hdr->eth_arp.arp_tha, 0, sizeof(packet_hdr->eth_arp.arp_tha));
     memcpy(&packet_hdr->eth_arp.arp_sha, buf, 6);
     memset(&packet_hdr->eth_arp.arp_tha, 255, 6);
-    if (inet_aton(ip, &d_ip) == -1)
+    if (inet_aton(dest_ip, &d_ip) == -1)
         exit(84);
-    if (inet_aton("0.0.0.0", &s_ip) == -1)
+    if (inet_aton(source_ip, &s_ip) == -1)
         exit(84);
     memcpy(&packet_hdr->eth_arp.arp_spa, &s_ip, sizeof(int));
     memcpy(&packet_hdr->eth_arp.arp_tpa, &d_ip, sizeof(int));
