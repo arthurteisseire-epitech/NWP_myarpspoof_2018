@@ -61,27 +61,27 @@ void mac_to_char6(const unsigned char *s, unsigned char *to_fill)
         }
 }
 
-void init_spoofed(arp_packet_t *packet_hdr, arp_t *arp)
+void init_spoofed(arp_packet_t *packet, arp_t *arp)
 {
     uint8_t *buf = get_mac_addr();
     struct in_addr s_ip;
     struct in_addr d_ip;
 
     mac_to_char6((unsigned char *) arp->mac_address,
-        (unsigned char *) &packet_hdr->eth_hdr.ether_dhost);
-    packet_hdr->eth_hdr.ether_type = 0x0608;
-    memcpy(&packet_hdr->eth_hdr.ether_shost, buf, 6);
-    init_arp_header(&packet_hdr->eth_arp.ea_hdr);
-    packet_hdr->eth_arp.ea_hdr.ar_op = 0x0200;
-    memset(&packet_hdr->eth_arp.arp_tha, 0, sizeof(packet_hdr->eth_arp.arp_tha));
-    memcpy(&packet_hdr->eth_arp.arp_sha, buf, 6);
+        (unsigned char *) &packet->eth_hdr.ether_dhost);
+    packet->eth_hdr.ether_type = 0x0608;
+    memcpy(&packet->eth_hdr.ether_shost, buf, 6);
+    init_arp_header(&packet->eth_arp.ea_hdr);
+    packet->eth_arp.ea_hdr.ar_op = 0x0200;
+    memset(&packet->eth_arp.arp_tha, 0, sizeof(packet->eth_arp.arp_tha));
+    memcpy(&packet->eth_arp.arp_sha, buf, 6);
     mac_to_char6((unsigned char *) arp->mac_address,
-        (unsigned char *) &packet_hdr->eth_arp.arp_tha);
+        (unsigned char *) &packet->eth_arp.arp_tha);
     if (inet_aton(arp->dest_ip, &d_ip) == -1)
         exit(84);
     if (inet_aton(arp->source_ip, &s_ip) == -1)
         exit(84);
-    memcpy(&packet_hdr->eth_arp.arp_spa, &s_ip, sizeof(int));
-    memcpy(&packet_hdr->eth_arp.arp_tpa, &d_ip, sizeof(int));
+    memcpy(&packet->eth_arp.arp_spa, &s_ip, sizeof(int));
+    memcpy(&packet->eth_arp.arp_tpa, &d_ip, sizeof(int));
     free(buf);
 }

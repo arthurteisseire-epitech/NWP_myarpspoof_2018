@@ -18,8 +18,7 @@ static void resolve_addr(struct ifconf *ifc, int sock, struct ifreq *ifr,
     int *success)
 {
     struct ifreq *it = (*ifc).ifc_req;
-    const struct ifreq *const end =
-        it + ((*ifc).ifc_len / sizeof(struct ifreq));
+    const struct ifreq *end = it + (ifc->ifc_len / sizeof(struct ifreq));
 
     for (; it != end; ++it) {
         strcpy((*ifr).ifr_name, it->ifr_name);
