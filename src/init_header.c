@@ -27,25 +27,25 @@ static void init_arp_header(struct arphdr *hdr)
     hdr->ar_pro = htons(ETHERTYPE_IP);
 }
 
-void init_broadcast(arp_packet_t *packet_hdr, char *dest_ip, char *source_ip)
+void init_broadcast(arp_packet_t *packet, char *dest_ip, char *source_ip)
 {
     uint8_t *buf = get_mac_addr();
     struct in_addr s_ip;
     struct in_addr d_ip;
 
-    memset(&packet_hdr->eth_hdr.ether_dhost, 255, 6);
-    packet_hdr->eth_hdr.ether_type = 0x0608;
-    memcpy(&packet_hdr->eth_hdr.ether_shost, buf, 6);
-    init_arp_header(&packet_hdr->eth_arp.ea_hdr);
-    memset(&packet_hdr->eth_arp.arp_tha, 0, sizeof(packet_hdr->eth_arp.arp_tha));
-    memcpy(&packet_hdr->eth_arp.arp_sha, buf, 6);
-    memset(&packet_hdr->eth_arp.arp_tha, 255, 6);
+    memset(&packet->eth_hdr.ether_dhost, 255, 6);
+    packet->eth_hdr.ether_type = 0x0608;
+    memcpy(&packet->eth_hdr.ether_shost, buf, 6);
+    init_arp_header(&packet->eth_arp.ea_hdr);
+    memset(&packet->eth_arp.arp_tha, 0, sizeof(packet->eth_arp.arp_tha));
+    memcpy(&packet->eth_arp.arp_sha, buf, 6);
+    memset(&packet->eth_arp.arp_tha, 255, 6);
     if (inet_aton(dest_ip, &d_ip) == -1)
         exit(84);
     if (inet_aton(source_ip, &s_ip) == -1)
         exit(84);
-    memcpy(&packet_hdr->eth_arp.arp_spa, &s_ip, sizeof(int));
-    memcpy(&packet_hdr->eth_arp.arp_tpa, &d_ip, sizeof(int));
+    memcpy(&packet->eth_arp.arp_spa, &s_ip, sizeof(int));
+    memcpy(&packet->eth_arp.arp_tpa, &d_ip, sizeof(int));
     free(buf);
 }
 

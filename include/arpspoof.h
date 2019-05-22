@@ -40,7 +40,7 @@ int is_mac_addr(const char *addr);
 arp_t *parse(int ac, char **av);
 int check_args(int ac, char **av);
 void usage(char *name);
-int create_socket();
+int create_socket(void);
 void mac_to_char6(const unsigned char *s, unsigned char *to_fill);
 struct sockaddr_ll create_dest_address(const char *if_name);
 char *char6_to_mac(const unsigned char *mac_addr);
